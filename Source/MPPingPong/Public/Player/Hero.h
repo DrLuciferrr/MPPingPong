@@ -4,26 +4,47 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "PlayerState/PS_Hero.h"
 #include "Hero.generated.h"
+
+class UStaticMeshComponent;
+class UMaterialInterface;
 
 UCLASS()
 class MPPINGPONG_API AHero : public APawn
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
+
+
+    virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	// Sets default values for this pawn's properties
-	AHero();
+    AHero();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+    TObjectPtr<UStaticMeshComponent> HeroMesh;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Materials")
+    TObjectPtr<UMaterialInterface> BlueMaterial;
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Materials")
+    TObjectPtr<UMaterialInterface> RedMaterial;
+
+    void MoveRight(float Value);
+
+public:
+    virtual void Tick(float DeltaTime) override;
+
+    virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+
+    UPROPERTY(ReplicatedUsing = OnRep_Team, BlueprintReadOnly, Category = "Team")
+    ETeam Team = ETeam::None;
+
+    UFUNCTION()
+    void OnRep_Team();
+    void Init(ETeam Team);
 };

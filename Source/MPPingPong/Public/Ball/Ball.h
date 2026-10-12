@@ -6,21 +6,46 @@
 #include "GameFramework/Actor.h"
 #include "Ball.generated.h"
 
+class USphereComponent;
+class UStaticMeshComponent;
+
 UCLASS()
 class MPPINGPONG_API ABall : public AActor
 {
-	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ABall();
+    GENERATED_BODY()
+
+public:
+    ABall();
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ball")
+    TObjectPtr<USphereComponent> CollisionSphere;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Ball")
+    TObjectPtr<UStaticMeshComponent> BallMesh;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ball")
+    float InitialSpeed = 1200.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ball")
+    float MaxSpeed = 2500.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ball")
+    float SpeedIncreasePerBounce = 30.0f;
+
+    FVector Velocity = FVector::ZeroVector;
+
+public:
+    virtual void Tick(float DeltaTime) override;
+
+    UFUNCTION(BlueprintCallable, Category = "Ball")
+    void LaunchBall(FVector Direction);
+
+    UFUNCTION(BlueprintCallable, Category = "Ball")
+    void DestroyBall();
+
+private:
+    void HandleBounce(const FHitResult& Hit);
 };

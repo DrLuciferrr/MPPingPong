@@ -10,7 +10,7 @@ public class MPPingPong : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG",
 
-        "OnlineSubsystem",
+        "OnlineSubsystem", "OnlineSubsystemUtils",
         });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
